@@ -12,6 +12,18 @@ class Lines
 
 };
 
+class Menu 
+{
+    private :
+    void edit_menu();
+    void introduction();
+    public :
+    void main_menu();
+
+};
+
+
+
 
 int main()
 {
