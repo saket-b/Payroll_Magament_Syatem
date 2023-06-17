@@ -14,15 +14,18 @@ using namespace std;
 
 void gotoxy(int x, int y)
 {
-    // COORD c
+    // COORD c;
+    // c.X = x;
+    // c.Y = y;
     // SetConsoleCursorPosition(GetStdHandle(STD_OUT_HANDLE), c);
+   // std::cout << "\033[2J" << std::flush;
 }
 class Lines
 {
 public:
-    void line_hor(int, int, int, int);
-    void line_ver(int, int, int, int);
-    void box(int, int, int, int, int);
+    void line_hor(int, int, int, char);
+    void line_ver(int, int, int, char);
+    void box(int, int, int, int, char);
     void clear_up();
     void clear_down();
 };
@@ -67,13 +70,15 @@ void Menu ::main_menu()
 {
 
     char ch;
+    cout<<"hello "<<endl;
     Lines l;
 
     l.clear_up();
+    cout<<"hello2 "<<endl;
 
     while (1)
     {
-        system("cls");
+//system("cls");
         gotoxy(14, 3);
         cout << " Payroll Management System : ";
         l.box(27, 7, 56, 9, 218);
@@ -170,22 +175,83 @@ void Menu ::edit_menu()
 
 void Lines ::clear_up()
 {
-    for (int i = 25; i >= 1; i--)
-    {
-        sleep(20);
-        gotoxy(i, 1);
-        std::cout << "\033[1D";
-    }
+    // for (int i = 25; i >= 1; i--)
+    // {
+    //     // sleep(20);
+    //     // gotoxy(i, 1);
+    //     std::cout << "\033[1D";
+    // }
 }
 
 void Lines::clear_down()
 {
-    for (int i = 1; i <= 25; i++)
+    // for (int i = 1; i <= 25; i++)
+    // {
+    //     sleep(20);
+    //     gotoxy(1, i);
+    //     std::cout << "\033[1D";
+    // }
+}
+
+void Lines::line_hor(int column1, int column2, int row, char c)
+{
+    for (column1; column1 <= column2; column1++)
     {
-        sleep(20);
-        gotoxy(1, i);
-        std::cout << "\033[1D";
+        gotoxy(column1, row);
+        cout << c;
     }
+}
+
+void Lines::line_ver(int row1, int row2, int column, char c)
+{
+    for (row1; row1 <= row2; row1++)
+    {
+        gotoxy(column, row1);
+        cout << c;
+    }
+}
+
+void Lines::box(int column1, int row1, int column2, int row2, char c)
+{
+    // char ch = 218;
+    // char c1, c2, c3, c4;
+    // char l1 = 196, l2 = 179;
+    // if (c == ch)
+    // {
+    //     c1 = 218;
+    //     c2 = 191;
+    //     c3 = 192;
+    //     c4 = 217;
+    //     l1 = 196;
+    //     l2 = 179;
+    // }
+    // else
+    // {
+    //     c1 = c;
+    //     c2 = c;
+    //     c3 = c;
+    //     c4 = c;
+    //     l1 = c;
+    //     l2 = c;
+    // }
+    // gotoxy(column1, row1);
+    // cout << c1;
+    // gotoxy(column2, row1);
+    // cout << c2;
+    // gotoxy(column1, row2);
+    // cout << c3;
+    // gotoxy(column2, row2);
+    // cout << c4;
+    // column1++;
+    // column2--;
+    // line_hor(column1, column2, row1, l1);
+    // line_ver(column1, column2, row2, l1);
+    // column1--;
+    // column2++;
+    // row1++;
+    // row2--;
+    // line_ver(row1, row2, column1, l2);
+    // line_ver(row1, row2, column2, l2);
 }
 
 // this function do add given data in Employee file
@@ -417,48 +483,104 @@ void Employee ::list()
 
     file.close();
 }
+
+// THIS FUNCTION DISPLAYS THE RECORD OF THE EMPLOYEES
+
+void Employee::display_record(int ecode)
+{
+    fstream file;
+    file.open("EMPLOYEE.DATA", ios::in);
+    file.seekg(0, ios::beg);
+    while (file.read((char *)this, sizeof(Employee)))
+    {
+        if (code == ecode)
+        {
+            gotoxy(5, 5);
+            cout << "Employee Code # " << code;
+            gotoxy(5, 6);
+            cout << "~~~~~~~~~~~~~";
+            gotoxy(5, 7);
+            cout << "Name         : " << name;
+            gotoxy(5, 8);
+            cout << "Address      : " << address;
+            gotoxy(5, 9);
+            cout << "Phone no.    : " << phone;
+            gotoxy(5, 11);
+            cout << "JOINING DATE";
+            gotoxy(5, 12);
+            cout << "~~~~~~~~~~~~";
+            gotoxy(5, 13);
+            cout << "Day   : " << dd;
+            gotoxy(5, 14);
+            cout << "Month : " << mm;
+            gotoxy(5, 15);
+            cout << "Year  : " << yyyy;
+            gotoxy(5, 17);
+            cout << "Designation  : " << design;
+            gotoxy(5, 18);
+            cout << "Grade        : " << grade;
+            if (grade != 'E')
+            {
+                gotoxy(5, 19);
+                cout << "House (y/n)    : " << house;
+                gotoxy(5, 20);
+                cout << "Convense (y/n) : " << convense;
+                gotoxy(5, 22);
+                cout << "Basic Salary   : " << basic;
+            }
+            gotoxy(5, 21);
+            cout << "Loan           : " << loan;
+        }
+    }
+    file.close();
+}
+
 void Employee::new_Employee(void)
 {
-    system("cls");
+   // system("cls");
+   cout<<"new employee"<<endl;
     char ch, egrade, ehouse = 'N', econv = 'N';
     char ename[26], eaddress[31], ephone[10], edesig[16], t1[10];
     float t2 = 0.0, eloan = 0.0, ebasic = 0.0;
     int d, m, y, ecode, valid;
+    
     gotoxy(72, 2);
-    cout << "<0>=EXIT";
-    gotoxy(28, 3);
-    cout << "ADDITION OF NEW Employee";
+    cout << "<0>=EXIT"<<endl;
+   cout<<"new employee2"<<endl;
+
+    gotoxy(2, 3);
+    cout << "\nADDITION OF NEW Employee"<<endl;
     gotoxy(5, 5);
-    cout << "Employee Code # ";
+    cout << "Employee Code # "<<endl;
     gotoxy(5, 6);
-    cout << "~~~~~~~~~~~~~";
+    cout << "~~~~~~~~~~~~~"<<endl;
     gotoxy(5, 7);
-    cout << "Name         : ";
+    cout << "Name         : "<<endl;
     gotoxy(5, 8);
-    cout << "Address      : ";
+    cout << "Address      : "<<endl;
     gotoxy(5, 9);
-    cout << "Phone no.    : ";
+    cout << "Phone no.    : "<<endl;
     gotoxy(5, 11);
-    cout << "JOINING DATE";
+    cout << "JOINING DATE"<<endl;
     gotoxy(5, 12);
-    cout << "~~~~~~~~~~~~";
+    cout << "~~~~~~~~~~~~"<<endl;
     gotoxy(5, 13);
-    cout << "Day   : ";
+    cout << "Day   : "<<endl;
     gotoxy(5, 14);
-    cout << "Month : ";
+    cout << "Month : "<<endl;
     gotoxy(5, 15);
-    cout << "Year  : ";
+    cout << "Year  : "<<endl;
     gotoxy(5, 17);
-    cout << "Designation  : ";
+    cout << "Designation  : "<<endl;
     gotoxy(5, 18);
-    cout << "Grade        : ";
+    cout << "Grade        : "<<endl;
     gotoxy(5, 21);
-    cout << "Loan           : ";
+    cout << "Loan           : \t\n\n"<<endl;
 
     ecode = last_code() + 1;
     if (ecode == 1)
     {
-        add_record(ecode, NULL, NULL, NULL, 0, 0, 0, NULL, 'n', 'n', 'n', 0.0, 0.0);
+        add_record(ecode, "null", "null", "null", 0, 0, 0, "null", 'n', 'n', 'n', 0.0, 0.0);
         delete_record(ecode);
     }
     gotoxy(21, 5);
@@ -797,7 +919,7 @@ void Employee::modification(void)
         return;
     system("cls");
     fstream file;
-    file.open("Employee.DAT", ios::in);
+    file.open("EMPLOYEE.DATA", ios::in);
     file.seekg(0, ios::beg);
     while (file.read((char *)this, sizeof(Employee)))
     {
@@ -1130,7 +1252,7 @@ void Employee::deletion(void)
 
 // THIS FUNCTION RETURN 0 IF THE GIVEN DATE IS INVALID
 
-int Employee:: valid_date(int d1, int m1, int y1)
+int Employee::valid_date(int d1, int m1, int y1)
 {
     int valid = 1;
     if (d1 > 31 || d1 < 1)
@@ -1144,7 +1266,7 @@ int Employee:: valid_date(int d1, int m1, int y1)
 
 // THIS FUNCTION PRINTS THE SALARY SLIP FOR THE EMPLOYEE
 
-void Employee:: salary_slip(void)
+void Employee::salary_slip(void)
 {
     system("cls");
     char t1[10];
@@ -1153,7 +1275,7 @@ void Employee:: salary_slip(void)
     cout << "<0>=EXIT";
     gotoxy(5, 5);
     cout << "Enter code of the Employee  ";
-    cin>>t1;
+    cin >> t1;
     t2 = atoi(t1);
     ecode = t2;
     if (ecode == 0)
@@ -1163,11 +1285,11 @@ void Employee:: salary_slip(void)
     {
         gotoxy(5, 5);
         cout << "\7Record not found";
-       getchar();
+        getchar();
         return;
     }
     fstream file;
-    file.open("EMPLOYEE.DAT", ios::in);
+    file.open("EMPLOYEE.DATA", ios::in);
     file.seekg(0, ios::beg);
     while (file.read((char *)this, sizeof(Employee)))
     {
@@ -1190,9 +1312,9 @@ void Employee:: salary_slip(void)
     gotoxy(34, 4);
     cout << "SALARY SLIP";
     gotoxy(60, 4);
-    //cout << "Date: " << d1 << "/" << m1 << "/" << y1;
-    //gotoxy(34, 5);
-    //cout << mon[m1 - 1] << ", " << y1;
+    // cout << "Date: " << d1 << "/" << m1 << "/" << y1;
+    // gotoxy(34, 5);
+    // cout << mon[m1 - 1] << ", " << y1;
     L.line_hor(3, 78, 6, 196);
     gotoxy(6, 7);
     cout << "Employee Name : " << name;
@@ -1212,7 +1334,7 @@ void Employee:: salary_slip(void)
             cout << "ENTER NO. OF DAYS WORKED IN THE MONTH ";
             gotoxy(10, 11);
             cout << "No. of Days   : ";
-            cin>>t1;
+            cin >> t1;
             t2 = atof(t1);
             days = t2;
             if (!valid_date(days, m1, y1))
@@ -1220,7 +1342,7 @@ void Employee:: salary_slip(void)
                 valid = 0;
                 gotoxy(10, 21);
                 cout << "\7ENTER CORRECTLY                       ";
-               getchar();
+                getchar();
                 gotoxy(10, 11);
                 cout << "                    ";
             }
@@ -1232,7 +1354,7 @@ void Employee:: salary_slip(void)
             cout << "ENTER NO. OF HOURS WORKED OVER TIME   ";
             gotoxy(10, 13);
             cout << "No. of hours  : ";
-            cin>>t1;
+            cin >> t1;
             t2 = atof(t1);
             hours = t2;
             if (hours > 8 || hours < 0)
@@ -1240,7 +1362,7 @@ void Employee:: salary_slip(void)
                 valid = 0;
                 gotoxy(10, 21);
                 cout << "\7ENTER CORRECTLY                     ";
-               getchar();
+                getchar();
                 gotoxy(10, 13);
                 cout << "                    ";
             }
@@ -1340,7 +1462,7 @@ void Employee:: salary_slip(void)
 int main()
 {
     Menu menu;
- menu.main_menu();
+    menu.main_menu();
 
     return (0);
 }
